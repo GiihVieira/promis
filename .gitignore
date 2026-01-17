@@ -1,0 +1,41 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build / output
+dist/
+build/
+out/
+
+# Cloudflare / Wrangler
+.wrangler/
+.wrangler/
+.dev.vars
+.dev.vars.json
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# TypeScript
+*.tsbuildinfo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+
+# Tests / coverage
+coverage/
+
+# PDF temp / generated files
+*.pdf
+!src/pdf/templates/*.pdf
