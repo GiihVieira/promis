@@ -1,4 +1,5 @@
-name = "receituario-odontologico"
+# wrangler.toml
+name = "promis"
 main = "src/index.ts"
 compatibility_date = "2026-01-14"
 
@@ -9,3 +10,18 @@ directory = "public"
 binding = "DB"
 database_name = "receituario_db"
 database_id = "af433617-be97-4768-8f47-b798c38fcbf8"
+
+[observability]
+enabled = false
+head_sampling_rate = 1
+
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+persist = true
+invocation_logs = true
+
+[observability.traces]
+enabled = false
+persist = true
+head_sampling_rate = 1
