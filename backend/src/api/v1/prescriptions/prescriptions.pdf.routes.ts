@@ -26,7 +26,7 @@ export function registerPrescriptionPdfRoutes(app: Hono<AppEnv>) {
 
       // ===== TEMPLATE PDF =====
       const templateResponse = await fetch(
-        new URL("/receituario.template.pdf", c.req.url)
+        new URL("./pdf/receituario.template.pdf", c.req.url)
       );
 
       if (!templateResponse.ok) {

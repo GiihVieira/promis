@@ -3,9 +3,6 @@ name = "promis"
 main = "src/index.ts"
 compatibility_date = "2026-01-14"
 
-[assets]
-directory = "public"
-
 [[d1_databases]]
 binding = "DB"
 database_name = "receituario_db"
