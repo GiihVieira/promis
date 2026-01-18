@@ -18,12 +18,13 @@ type AuthContextType = {
   logout: () => void;
 };
 
-const AuthContext = createContext<AuthContextType>(null!);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
+  // 🔑 bootstrap de autenticação
   useEffect(() => {
     const token = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");
@@ -31,6 +32,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (token && storedUser) {
       setUser(JSON.parse(storedUser));
     }
+
+    setLoading(false); // 🔥 ISSO É ESSENCIAL
   }, []);
 
   async function login(email: string, password: string) {
@@ -44,7 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (!res.ok) {
       setLoading(false);
-      throw new Error("Invalid credentials");
+      throw new Error("Credenciais inválidas");
     }
 
     const data = await res.json();
@@ -70,5 +73,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useAuth() {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw new Error("useAuth must be used within AuthProvider");
+  }
+
+  return context;
 }
