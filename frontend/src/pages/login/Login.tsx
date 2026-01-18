@@ -1,9 +1,11 @@
 import { type FormEvent, useState } from "react";
 import "./login.css";
 import { useAuth } from "../../auth/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const { login, loading } = useAuth();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,6 +17,7 @@ export default function Login() {
 
     try {
       await login(email, password);
+      navigate("/");
     } catch {
       setError("Email ou senha inválidos");
     }
