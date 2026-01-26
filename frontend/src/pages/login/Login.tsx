@@ -1,14 +1,15 @@
-import { type FormEvent, useState } from "react";
-import "./login.css";
-import { useAuth } from "../../auth/AuthContext";
+import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../auth/AuthContext";
+import "./login.css";
 
 export default function Login() {
-  const { login, loading } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
   async function handleSubmit(e: FormEvent) {
@@ -35,38 +36,36 @@ export default function Login() {
               <label>Email</label>
               <input
                 type="email"
-                placeholder="seu@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
 
-            <div className="login-field">
+            <div className="login-field password-field">
               <label>Senha</label>
-              <input
-                type="password"
-                placeholder="**********"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+
+              <div className="password-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+
+                <span
+                  className="material-icons password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? "visibility_off" : "visibility"}
+                </span>
+              </div>
             </div>
 
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {error && <p className="login-error">{error}</p>}
 
-            <button
-              type="submit"
-              className="login-button"
-              disabled={loading}
-            >
-              Entrar no Sistema
-            </button>
+            <button className="login-button">Entrar</button>
           </form>
-
-          <div className="login-footer">
-            © Promis Odontologia
-          </div>
         </div>
       </div>
     </div>

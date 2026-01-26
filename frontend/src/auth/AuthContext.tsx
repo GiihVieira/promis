@@ -1,14 +1,9 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { loginRequest } from "../api/auth";
 
 type User = {
   id: string;
   name: string;
-  role: string;
 };
 
 type AuthContextType = {
@@ -18,13 +13,12 @@ type AuthContextType = {
   logout: () => void;
 };
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>(null!);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔑 bootstrap de autenticação
   useEffect(() => {
     const token = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");
@@ -33,35 +27,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(JSON.parse(storedUser));
     }
 
-    setLoading(false); // 🔥 ISSO É ESSENCIAL
+    setLoading(false);
   }, []);
 
   async function login(email: string, password: string) {
-    setLoading(true);
-
-    const res = await fetch("http://localhost:8787/api/v1/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-
-    if (!res.ok) {
-      setLoading(false);
-      throw new Error("Credenciais inválidas");
-    }
-
-    const data = await res.json();
+    const data = await loginRequest(email, password);
 
     localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify(data.user));
 
     setUser(data.user);
-    setLoading(false);
   }
 
   function logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    localStorage.clear();
     setUser(null);
   }
 
@@ -73,11 +52,5 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext);
-
-  if (!context) {
-    throw new Error("useAuth must be used within AuthProvider");
-  }
-
-  return context;
+  return useContext(AuthContext);
 }
