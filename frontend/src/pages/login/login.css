@@ -11,6 +11,25 @@
   );
 }
 
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  padding-right: 44px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #8b3f10;
+  font-size: 22px;
+}
+
+
 /* Card do login */
 .login-card {
   width: 100%;
