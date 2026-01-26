@@ -1,5 +1,5 @@
 import { FileText, Users, Pill } from "lucide-react";
-import type { HomeTab } from "./Home";
+import type { HomeTab } from "../pages/home/Home";
 
 type Props = {
   activeTab: HomeTab;
