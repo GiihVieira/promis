@@ -6,6 +6,13 @@ export async function authMiddleware(
   c: Context<AppEnv>,
   next: Next
 ) {
+  if (!c.env.JWT_SECRET) {
+    return c.json(
+      { error: "JWT_SECRET not configured" },
+      500
+    );
+  }
+
   const auth = c.req.header("Authorization");
 
   if (!auth || !auth.startsWith("Bearer ")) {
