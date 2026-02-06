@@ -210,3 +210,23 @@ export async function getDentistInfo(
     .bind(dentistId)
     .first<{ name: string; cro: string | null }>();
 }
+
+/**
+ * Retrieve patient info for PDF rendering.
+ */
+export async function getPatientInfo(
+  db: D1Database,
+  patientId: string
+): Promise<{ name: string } | null> {
+  return db
+    .prepare(
+      `
+      SELECT name
+      FROM patients
+      WHERE id = ?
+      LIMIT 1
+    `
+    )
+    .bind(patientId)
+    .first<{ name: string }>();
+}

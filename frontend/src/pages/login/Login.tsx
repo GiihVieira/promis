@@ -7,7 +7,7 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
+  const [loginValue, setLoginValue] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -17,10 +17,10 @@ export default function Login() {
     setError("");
 
     try {
-      await login(email, password);
+      await login(loginValue, password);
       navigate("/");
     } catch {
-      setError("Email ou senha inválidos");
+      setError("Usuário/email ou senha inválidos");
     }
   }
 
@@ -33,11 +33,11 @@ export default function Login() {
 
           <form onSubmit={handleSubmit}>
             <div className="login-field">
-              <label>Email</label>
+              <label>Usuário ou email</label>
               <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                value={loginValue}
+                onChange={(e) => setLoginValue(e.target.value)}
                 required
               />
             </div>

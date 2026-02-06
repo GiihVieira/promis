@@ -9,7 +9,7 @@ type User = {
 type AuthContextType = {
   user: User | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (login: string, password: string) => Promise<void>;
   logout: () => void;
 };
 
@@ -30,8 +30,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(false);
   }, []);
 
-  async function login(email: string, password: string) {
-    const data = await loginRequest(email, password);
+  async function login(login: string, password: string) {
+    const data = await loginRequest(login, password);
 
     localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify(data.user));

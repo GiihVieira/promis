@@ -4,6 +4,7 @@ import { authMiddleware } from "../../../app/middlewares/auth.middleware";
 import {
   getPrescriptionById,
   getDentistInfo,
+  getPatientInfo,
 } from "./prescriptions.service";
 import { generatePrescriptionPdf } from "../../../pdf/generate-receipt";
 
@@ -51,6 +52,19 @@ export function registerPrescriptionPdfRoutes(app: Hono<AppEnv>) {
         );
       }
 
+      // ===== PACIENTE =====
+      const patient = await getPatientInfo(
+        c.env.DB,
+        prescription.patient_id
+      );
+
+      if (!patient) {
+        return c.json(
+          { error: "Patient not found" },
+          500
+        );
+      }
+
       // ===== ITENS DA PRESCRIÇÃO (FORMATO PDF) =====
       const items = prescription.items.map((item) => ({
         title: item.medication_name,
@@ -70,7 +84,7 @@ export function registerPrescriptionPdfRoutes(app: Hono<AppEnv>) {
       const pdfBuffer = await generatePrescriptionPdf(
         templateBytes,
         {
-          patientName: "Paciente", // TODO: ligar com tabela patients
+          patientName: patient.name,
           dentistName: dentist.name,
           cro: dentist.cro ? `${dentist.cro}` : undefined,
           dateExtenso,
