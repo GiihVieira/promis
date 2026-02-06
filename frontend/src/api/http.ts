@@ -4,18 +4,22 @@ export async function apiFetch(
   path: string,
   options: RequestInit = {}
 ) {
-  const token = localStorage.getItem("token");
-
   const headers: HeadersInit = {
     "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
     ...options.headers,
   };
 
   const response = await fetch(`${API_URL}${path}`, {
     ...options,
     headers,
+    credentials: "include",
   });
+
+  if (response.status === 401) {
+    localStorage.removeItem("user");
+    window.location.href = "/login";
+    throw new Error("Unauthorized");
+  }
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));

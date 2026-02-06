@@ -1,9 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { loginRequest } from "../api/auth";
+import { loginRequest, logoutRequest } from "../api/auth";
 
 type User = {
   id: string;
   name: string;
+  email?: string;
+  role?: string;
 };
 
 type AuthContextType = {
@@ -20,27 +22,61 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
+    let active = true;
 
-    if (token && storedUser) {
-      setUser(JSON.parse(storedUser));
+    async function loadSession() {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/v1/auth/me`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
+
+        if (!active) return;
+
+        if (!res.ok) {
+          localStorage.removeItem("user");
+          setUser(null);
+          setLoading(false);
+          return;
+        }
+
+        const data = await res.json();
+        if (data?.user) {
+          localStorage.setItem("user", JSON.stringify(data.user));
+          setUser(data.user);
+        } else {
+          localStorage.removeItem("user");
+          setUser(null);
+        }
+      } catch {
+        if (!active) return;
+        localStorage.removeItem("user");
+        setUser(null);
+      } finally {
+        if (active) setLoading(false);
+      }
     }
 
-    setLoading(false);
+    loadSession();
+    return () => {
+      active = false;
+    };
   }, []);
 
   async function login(login: string, password: string) {
     const data = await loginRequest(login, password);
 
-    localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify(data.user));
 
     setUser(data.user);
   }
 
   function logout() {
-    localStorage.clear();
+    logoutRequest().catch(() => undefined);
+    localStorage.removeItem("user");
     setUser(null);
   }
 
