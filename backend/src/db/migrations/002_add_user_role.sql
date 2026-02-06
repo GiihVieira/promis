@@ -1,2 +1,2 @@
-ALTER TABLE users
-ADD COLUMN role TEXT NOT NULL DEFAULT 'user';
+-- no-op: role column is created in 001_initial.sql
+SELECT 1;

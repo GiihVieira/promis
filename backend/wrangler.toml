@@ -7,6 +7,7 @@ compatibility_date = "2026-01-14"
 binding = "DB"
 database_name = "receituario_db"
 database_id = "af433617-be97-4768-8f47-b798c38fcbf8"
+migrations_dir = "src/db/migrations"
 
 [observability]
 enabled = false
