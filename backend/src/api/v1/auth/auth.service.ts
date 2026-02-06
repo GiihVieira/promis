@@ -6,7 +6,7 @@ const JWT_EXPIRATION = 60 * 60 * 8; // 8h
 
 export async function authenticateUser(
   db: D1Database,
-  email: string,
+  login: string,
   password: string,
   jwtSecret: string
 ) {
@@ -15,11 +15,11 @@ export async function authenticateUser(
       `
       SELECT *
       FROM users
-      WHERE email = ? AND is_active = 1
+      WHERE (LOWER(email) = LOWER(?) OR LOWER(name) = LOWER(?)) AND is_active = 1
       LIMIT 1
     `
     )
-    .bind(email)
+    .bind(login, login)
     .first<any>();
 
   if (!user) {

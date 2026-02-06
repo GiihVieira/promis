@@ -6,11 +6,11 @@ import { validateLogin } from "./auth.schema";
 export function registerAuthRoutes(app: Hono<AppEnv>) {
   app.post("/api/v1/auth/login", async (c) => {
     const body = await c.req.json();
-    const { email, password } = validateLogin(body);
+    const { login, password } = validateLogin(body);
 
     const result = await authenticateUser(
       c.env.DB,
-      email,
+      login,
       password,
       c.env.JWT_SECRET
     );
