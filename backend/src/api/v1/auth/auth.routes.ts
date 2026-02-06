@@ -6,6 +6,7 @@ import {
   revokeSession,
 } from "./auth.service";
 import { validateLogin } from "./auth.schema";
+import { authMiddleware } from "../../../app/middlewares/auth.middleware";
 
 export function registerAuthRoutes(app: Hono<AppEnv>) {
   app.post("/api/v1/auth/login", async (c) => {
@@ -51,6 +52,27 @@ export function registerAuthRoutes(app: Hono<AppEnv>) {
 
       return c.json({ error: "Internal server error" }, 500);
     }
+  });
+
+  app.get("/api/v1/auth/me", authMiddleware, async (c) => {
+    const user = c.get("user");
+
+    const dbUser = await c.env.DB.prepare(
+      `
+      SELECT id, name, email, role
+      FROM users
+      WHERE id = ?
+      LIMIT 1
+    `
+    )
+      .bind(user.sub)
+      .first<{ id: string; name: string; email: string; role: string }>();
+
+    if (!dbUser) {
+      return c.json({ error: "User not found" }, 404);
+    }
+
+    return c.json({ user: dbUser });
   });
 
   app.post("/api/v1/auth/logout", async (c) => {
