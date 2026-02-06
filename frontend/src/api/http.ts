@@ -15,6 +15,12 @@ export async function apiFetch(
     credentials: "include",
   });
 
+  if (response.status === 401) {
+    localStorage.removeItem("user");
+    window.location.href = "/login";
+    throw new Error("Unauthorized");
+  }
+
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));
     throw new Error(error.error || "Erro na requisição");

@@ -5,6 +5,12 @@ export async function listPatients() {
     credentials: "include",
   });
 
+  if (res.status === 401) {
+    localStorage.removeItem("user");
+    window.location.href = "/login";
+    throw new Error("Unauthorized");
+  }
+
   if (!res.ok) {
     throw new Error("Erro ao carregar pacientes");
   }
