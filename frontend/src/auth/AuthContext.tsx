@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { loginRequest } from "../api/auth";
+import { loginRequest, logoutRequest } from "../api/auth";
 
 type User = {
   id: string;
@@ -20,10 +20,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");
 
-    if (token && storedUser) {
+    if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
 
@@ -33,14 +32,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   async function login(login: string, password: string) {
     const data = await loginRequest(login, password);
 
-    localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify(data.user));
 
     setUser(data.user);
   }
 
   function logout() {
-    localStorage.clear();
+    logoutRequest().catch(() => undefined);
+    localStorage.removeItem("user");
     setUser(null);
   }
 

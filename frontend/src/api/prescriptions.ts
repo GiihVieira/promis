@@ -9,15 +9,13 @@ export async function createPrescription(data: {
   patient_id: string;
   items: PrescriptionItem[];
 }) {
-  const token = localStorage.getItem("token");
-
   const res = await fetch(`${API_URL}/api/v1/prescriptions`, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
+    credentials: "include",
   });
 
   if (!res.ok) {
