@@ -31,13 +31,19 @@ export default function HomeHeader() {
           background: "transparent",
           border: "1px solid rgba(255, 255, 255, 0.6)",
           color: "#fff",
-          padding: "8px 14px",
+          padding: "8px 12px",
           borderRadius: 8,
           cursor: "pointer",
           fontSize: 14,
           fontWeight: 600,
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 6,
         }}
       >
+        <span className="material-icons" style={{ fontSize: 18 }}>
+          logout
+        </span>
         Sair
       </button>
     </header>
