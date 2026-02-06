@@ -27,12 +27,13 @@ export function registerAuthRoutes(app: Hono<AppEnv>) {
 
       const url = new URL(c.req.url);
       const secure = url.protocol === "https:";
+      const sameSite = secure ? "None" : "Lax";
 
       const cookie = [
         `session_id=${session.id}`,
         "HttpOnly",
         "Path=/",
-        "SameSite=Lax",
+        `SameSite=${sameSite}`,
         `Max-Age=${session.maxAgeSeconds}`,
         secure ? "Secure" : null,
       ]
@@ -91,11 +92,12 @@ export function registerAuthRoutes(app: Hono<AppEnv>) {
 
     const url = new URL(c.req.url);
     const secure = url.protocol === "https:";
+    const sameSite = secure ? "None" : "Lax";
     const clearCookie = [
       "session_id=",
       "HttpOnly",
       "Path=/",
-      "SameSite=Lax",
+      `SameSite=${sameSite}`,
       "Max-Age=0",
       secure ? "Secure" : null,
     ]
