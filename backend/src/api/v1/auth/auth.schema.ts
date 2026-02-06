@@ -1,15 +1,17 @@
 export type LoginInput = {
-  email: string;
+  login: string;
   password: string;
 };
 
 export function validateLogin(data: any): LoginInput {
-  if (!data?.email || !data?.password) {
-    throw new Error("Email and password are required");
+  const login = data?.login ?? data?.email;
+
+  if (!login || !data?.password) {
+    throw new Error("Login and password are required");
   }
 
   return {
-    email: data.email,
+    login: String(login).trim(),
     password: data.password,
   };
 }
